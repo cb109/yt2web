@@ -28,7 +28,7 @@ def download_playlist_from_youtube_url(playlist_url):
     if not os.path.isdir(settings.MEDIA_ROOT):
         os.makedirs(os.path.normpath(settings.MEDIA_ROOT))
 
-    for i, yt_video in enumerate(yt_videos):
+    for i, yt_video in enumerate(reversed(yt_videos)):
         stream = yt_video.streams.get_audio_only()
         if not stream:
             print(f"No audio stream found for {yt_video.title}")

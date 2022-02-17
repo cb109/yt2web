@@ -62,7 +62,7 @@ class VideoAdmin(BaseModelAdmin):
     def player(self, video):
         if not video.content_file.name:
             return ""
-        return f"<audio preload='auto' controls src='{video.content_file.url}'>"
+        return f"<audio controls src='{video.content_file.url}'>"
 
     @mark_safe
     def youtube_link(self, video):

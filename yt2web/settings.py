@@ -129,3 +129,5 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_ROOT = "downloads"
+
+LOGIN_REDIRECT_URL = "/admin/login/"

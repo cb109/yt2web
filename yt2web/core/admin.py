@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from yt2web.core.models import Playlist
@@ -14,7 +15,8 @@ class PlaylistAdmin(BaseModelAdmin):
     list_display = (
         "title",
         "num_videos",
-        "link",
+        "player_link",
+        "youtube_link",
         "downloaded",
         "created_at",
         "updated_at",
@@ -25,10 +27,15 @@ class PlaylistAdmin(BaseModelAdmin):
         return playlist.videos.count()
 
     @mark_safe
-    def link(self, playlist):
+    def player_link(self, playlist):
+        url = reverse("playlist", args=(playlist.id,))
+        return f"<a href='{url}'>Go to Player</a>"
+
+    @mark_safe
+    def youtube_link(self, playlist):
         if not playlist.url:
             return ""
-        return f"<a href='{playlist.url}'>Watch on YouTube</a>"
+        return f"<a href='{playlist.url}'>Go to YouTube</a>"
 
 
 class VideoAdmin(BaseModelAdmin):
@@ -37,7 +44,7 @@ class VideoAdmin(BaseModelAdmin):
         "thumbnail",
         "player",
         "duration",
-        "link",
+        "youtube_link",
         "downloaded",
         "created_at",
         "updated_at",
@@ -56,8 +63,8 @@ class VideoAdmin(BaseModelAdmin):
         return f"<audio preload='auto' controls src='{video.content_file.url}'>"
 
     @mark_safe
-    def link(self, video):
-        return f"<a href='{video.url}'>Watch on YouTube</a>"
+    def youtube_link(self, video):
+        return f"<a href='{video.url}'>Go to YouTube</a>"
 
 
 admin.site.site_header = "yt2web"

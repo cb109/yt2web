@@ -22,7 +22,7 @@ from yt2web.core import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.playlists),
+    path("playlist/<int:playlist_id>", views.playlist, name="playlist"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

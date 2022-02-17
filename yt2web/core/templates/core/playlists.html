@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlists</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/amplitudejs@5.3.2/dist/amplitude.js"></script>
+  </head>
+  <body>
+    <div class="players-container">
+      {% for song in songs %}
+        <div class="player">
+          <img src="{{ song.cover_art_url }}" class="album-art"/>
+          <div class="meta-container">
+            <div class="song-title">{{ song.name }}</div>
+            <!-- <div class="song-artist">Emancipator</div> -->
+            <div class="time-container">
+              <div class="current-time">
+                <span class="amplitude-current-minutes" data-amplitude-song-index="{{ forloop.counter0 }}"></span>:<span class="amplitude-current-seconds" data-amplitude-song-index="{{ forloop.counter0 }}"></span>
+              </div>
+              <div class="duration">
+                <span class="amplitude-duration-minutes" data-amplitude-song-index="{{ forloop.counter0 }}">03</span>:<span class="amplitude-duration-seconds" data-amplitude-song-index="{{ forloop.counter0 }}">16</span>
+              </div>
+            </div>
+            <progress class="amplitude-song-played-progress" data-amplitude-song-index="{{ forloop.counter0 }}" id="song-played-progress-2"></progress>
+            <div class="control-container">
+              <div class="amplitude-prev">
+              </div>
+              <div class="amplitude-play-pause" data-amplitude-song-index="{{ forloop.counter0 }}">
+              </div>
+              <div class="amplitude-next">
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div id="preload">
+      <img src="https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/previous.svg"/>
+      <img src="https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/play.svg"/>
+      <img src="https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/pause.svg"/>
+      <img src="https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/next.svg"/>
+    </div>
+    <style>
+      /*
+        1. Base
+      */
+      /*
+        2. Components
+      */
+      div.player {
+        border: 1px solid #eaeaea;
+        margin-bottom: 20px;
+        max-width: 750px;
+        margin: auto;
+        margin-top: 40px; }
+        div.player:after {
+          content: "";
+          display: table;
+          clear: both; }
+        div.player img.album-art {
+          width: 245px;
+          height: 245px;
+          object-fit: cover;
+          float: left; }
+
+      /*
+        Small only
+      */
+      @media screen and (max-width: 39.9375em) {
+        div.player img.album-art {
+          width: 100%;
+          height: auto; } }
+      /*
+        Medium only
+      */
+      /*
+        Large Only
+      */
+      div.meta-container {
+        float: left;
+        width: calc(100% - 270px);
+        padding: 10px; }
+        div.meta-container div.song-title {
+          text-align: center;
+          color: #263238;
+          font-size: 1.25em;
+          font-weight: 600;
+          white-space: nowrap;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+          font-family: "Open Sans", sans-serif; }
+        div.meta-container div.song-artist {
+          text-align: center;
+          font-family: "Open Sans", sans-serif;
+          font-size: 16px;
+          color: #263238;
+          margin-top: 10px; }
+        div.meta-container div.time-container {
+          font-family: Helvetica;
+          font-size: 18px;
+          color: #000;
+          margin-bottom: 10px; }
+          div.meta-container div.time-container:after {
+            content: "";
+            display: table;
+            clear: both; }
+          div.meta-container div.time-container div.current-time {
+            float: left; }
+          div.meta-container div.time-container div.duration {
+            float: right; }
+
+      /*
+        Small only
+      */
+      @media screen and (max-width: 39.9375em) {
+        div.meta-container {
+          width: 100%; } }
+      /*
+        Medium only
+      */
+      /*
+        Large Only
+      */
+      div.control-container {
+        text-align: center;
+        margin-top: 40px; }
+        div.control-container div.amplitude-prev {
+          width: 28px;
+          height: 24px;
+          cursor: pointer;
+          background: url("https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/previous.svg");
+          display: inline-block;
+          vertical-align: middle; }
+        div.control-container div.amplitude-play-pause {
+          width: 40px;
+          height: 44px;
+          cursor: pointer;
+          display: inline-block;
+          vertical-align: middle; }
+          div.control-container div.amplitude-play-pause.amplitude-paused {
+            background: url("https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/play.svg"); }
+          div.control-container div.amplitude-play-pause.amplitude-playing {
+            background: url("https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/pause.svg"); }
+        div.control-container div.amplitude-next {
+          width: 28px;
+          height: 24px;
+          cursor: pointer;
+          background: url("https://521dimensions.com/img/open-source/amplitudejs/examples/multiple-songs/next.svg");
+          display: inline-block;
+          vertical-align: middle; }
+
+      /*
+        Small only
+      */
+      @media screen and (max-width: 39.9375em) {
+        div.control-container div.amplitude-prev {
+          margin-right: 75px; }
+        div.control-container div.amplitude-next {
+          margin-left: 75px; } }
+      /*
+        Medium only
+      */
+      @media screen and (min-width: 40em) and (max-width: 63.9375em) {
+        div.control-container div.amplitude-prev {
+          margin-right: 40px; }
+        div.control-container div.amplitude-next {
+          margin-left: 40px; } }
+      /*
+        Large Only
+      */
+      @media screen and (min-width: 64em) {
+        div.control-container div.amplitude-prev {
+          margin-right: 75px; }
+        div.control-container div.amplitude-next {
+          margin-left: 75px; } }
+      progress.amplitude-song-played-progress:not([value]) {
+        background-color: #313252; }
+
+      progress.amplitude-song-played-progress {
+        background-color: #d7dee3;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 5px;
+        display: block;
+        cursor: pointer;
+        border-radius: 3px;
+        height: 8px;
+        border: none; }
+
+      progress[value]::-webkit-progress-bar {
+        background-color: #d7dee3;
+        border-radius: 3px; }
+
+      progress[value]::-moz-progress-bar {
+        background-color: #00a0ff;
+        border-radius: 3px; }
+
+      progress[value]::-webkit-progress-value {
+        background-color: #00a0ff;
+        border-radius: 3px; }
+
+      /*
+        3. Layout
+      */
+      body {
+        background-color: #FFFFFF;
+        -webkit-font-smoothing: antialiased;
+        padding: 20px; }
+        body div#preload {
+          display: none; }
+
+      .players-container {
+
+      }
+    </style>
+    <script>
+      Amplitude.init({
+        "songs": {{ songs|safe }}
+      });
+
+      document.getElementById('song-played-progress-1').addEventListener('click', function( e ){
+        if( Amplitude.getActiveIndex() == 0 ){
+          var offset = this.getBoundingClientRect();
+          var x = e.pageX - offset.left;
+
+          Amplitude.setSongPlayedPercentage( ( parseFloat( x ) / parseFloat( this.offsetWidth) ) * 100 );
+        }
+      });
+
+      document.getElementById('song-played-progress-2').addEventListener('click', function( e ){
+        if( Amplitude.getActiveIndex() == 1 ){
+          var offset = this.getBoundingClientRect();
+          var x = e.pageX - offset.left;
+
+          Amplitude.setSongPlayedPercentage( ( parseFloat( x ) / parseFloat( this.offsetWidth) ) * 100 );
+        }
+      });
+    </script>
+  </body>
+</html>

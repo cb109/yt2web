@@ -29,6 +29,8 @@ class PlaylistAdmin(BaseModelAdmin):
 
     @mark_safe
     def player_link(self, playlist):
+        if not playlist.id:
+            return ""
         url = reverse("playlist", args=(playlist.id,))
         return f"<a href='{url}'>Go to Player</a>"
 

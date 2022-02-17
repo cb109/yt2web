@@ -1,6 +1,7 @@
 import math
 import os
 import urllib.request
+import uuid
 
 import pytube
 from django.conf import settings
@@ -38,6 +39,13 @@ def download_playlist_from_youtube_url(playlist_url):
         print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
 
         video_filepath = stream.download(output_path=settings.MEDIA_ROOT)
+
+        random_filename = str(uuid.uuid4())
+        random_video_filepath = os.path.join(
+            os.path.dirname(video_filepath), random_filename + ".mp4"
+        )
+        os.rename(video_filepath, random_video_filepath)
+
         video, _ = Video.objects.get_or_create(
             url=yt_video.watch_url,
             audio_only=True,
@@ -53,13 +61,13 @@ def download_playlist_from_youtube_url(playlist_url):
         if video.downloaded:
             continue
 
-        video_filename = os.path.basename(video_filepath)
-        with open(video_filepath, "rb") as f:
+        video_filename = os.path.basename(random_video_filepath)
+        with open(random_video_filepath, "rb") as f:
             video.content_file.save(video_filename, File(f))
 
         thumbnail_url = yt_video.thumbnail_url
         if thumbnail_url:
-            base, _ = os.path.splitext(video_filepath)
+            base, _ = os.path.splitext(random_video_filepath)
             image_filepath = base + ".jpg"
             print(f"  - Downloading thumbnail ...")
             urllib.request.urlretrieve(thumbnail_url, image_filepath)

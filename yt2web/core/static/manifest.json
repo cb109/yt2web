@@ -1,0 +1,9 @@
+{
+  "name": "yt2web",
+  "short_name": "yt2web",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+
+  ]
+}

@@ -41,9 +41,10 @@ def download_playlist_from_youtube_url(playlist_url):
         # print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
 
         random_filename = str(uuid.uuid4())
+        video_filename = random_filename + ".mp4"
         video_filepath = stream.download(
             output_path=settings.MEDIA_ROOT,
-            filename=random_filename,
+            filename=video_filename,
         )
 
         video, _ = Video.objects.get_or_create(

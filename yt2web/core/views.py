@@ -27,4 +27,11 @@ def playlist(request, playlist_id: int):
             }
         )
 
-    return render(request, "core/playlists.html", {"songs": songs})
+    return render(
+        request,
+        "core/playlists.html",
+        {
+            "playlist": playlist,
+            "songs": songs,
+        },
+    )

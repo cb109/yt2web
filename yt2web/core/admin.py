@@ -22,6 +22,7 @@ class PlaylistAdmin(BaseModelAdmin):
         "updated_at",
     )
     filter_horizontal = ("videos",)
+    readonly_fields = ("player_link", "youtube_link")
 
     def num_videos(self, playlist):
         return playlist.videos.count()
@@ -49,6 +50,7 @@ class VideoAdmin(BaseModelAdmin):
         "created_at",
         "updated_at",
     )
+    readonly_fields = ("player", "youtube_link")
 
     @mark_safe
     def thumbnail(self, video):

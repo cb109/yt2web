@@ -20,7 +20,8 @@ def download_playlist_from_youtube_url(playlist_url):
     if playlist.downloaded:
         return
 
-    print(f"Downloading playlist {yt_playlist.title} ...")
+    print(f"Downloading playlist ...")
+    # print(f"Downloading playlist {yt_playlist.title} ...")
 
     yt_videos = list(yt_playlist.videos)
     num_videos = len(yt_videos)
@@ -32,11 +33,12 @@ def download_playlist_from_youtube_url(playlist_url):
     for i, yt_video in enumerate(reversed(yt_videos)):
         stream = yt_video.streams.get_audio_only()
         if not stream:
-            print(f"No audio stream found for {yt_video.title}")
+            # print(f"No audio stream found for {yt_video.title}")
             continue
 
         n = str(i + 1).zfill(num_digits)
-        print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
+        print(f"[{n}/{num_videos}] Downloading video ...")
+        # print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
 
         video_filepath = stream.download(output_path=settings.MEDIA_ROOT)
 

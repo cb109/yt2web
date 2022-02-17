@@ -40,9 +40,14 @@ def download_playlist_from_youtube_url(playlist_url):
         video_filepath = stream.download(output_path=settings.MEDIA_ROOT)
         video, _ = Video.objects.get_or_create(
             url=yt_video.watch_url,
-            title=yt_video.title,
             audio_only=True,
         )
+        if video.title != yt_video.title:
+            video.title = yt_video.title
+        if video.duration != yt_video.length:
+            video.duration = yt_video.length
+        video.save(update_fields=["title", "duration"])
+
         playlist.videos.add(video)
 
         if video.downloaded:

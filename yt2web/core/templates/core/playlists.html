@@ -54,6 +54,9 @@
       </a>
     </div>
     <div id="player-bottom">
+      <div id="volume-container">
+        <img src="https://521dimensions.com/img/open-source/amplitudejs/examples/flat-black/volume.svg"/><input type="range" class="amplitude-volume-slider" step=".1"/>
+      </div>
       <div id="control-container">
         <div id="shuffle-container">
           <div class="amplitude-shuffle amplitude-shuffle-off" id="shuffle"></div>
@@ -70,9 +73,6 @@
         <div id="repeat-container">
           <div class="amplitude-repeat" id="repeat"></div>
         </div>
-      </div>
-      <div id="volume-container">
-        <img src="https://521dimensions.com/img/open-source/amplitudejs/examples/flat-black/volume.svg"/><input type="range" class="amplitude-volume-slider" step=".1"/>
       </div>
     </div>
     <div id="player-middle">
@@ -595,13 +595,13 @@
     clear: both;
   }
   div#player-bottom div#volume-container {
-    padding-bottom: 20px;
+    padding-top: 20px;
     text-align: center;
   }
   div#player-bottom div#volume-container img {
     display: block;
     float: left;
-    margin-top: -9px;
+    margin-top: -7px;
   }
   div#player-bottom
     div#volume-container

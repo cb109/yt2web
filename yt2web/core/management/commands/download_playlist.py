@@ -114,4 +114,4 @@ class Command(BaseCommand):
             return
 
         # Process any existing Playlists that are not yet downloaded.
-        download_unfinished_playlists()
+        download_unfinished_playlists(verbose=verbose)

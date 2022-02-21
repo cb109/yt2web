@@ -11,7 +11,7 @@ from yt2web.core.models import Video
 from django.core.files.base import File
 
 
-def download_playlist_from_youtube_url(playlist_url):
+def download_playlist_from_youtube_url(playlist_url: str, verbose: bool = False):
     yt_playlist = pytube.Playlist(playlist_url)
     playlist, _ = Playlist.objects.get_or_create(
         url=playlist_url,
@@ -20,8 +20,9 @@ def download_playlist_from_youtube_url(playlist_url):
     if playlist.downloaded:
         return
 
-    print(f"Downloading playlist ...")
-    # print(f"Downloading playlist {yt_playlist.title} ...")
+    if verbose:
+        print(f"Downloading playlist ...")
+        # print(f"Downloading playlist {yt_playlist.title} ...")
 
     yt_videos = list(yt_playlist.videos)
     num_videos = len(yt_videos)
@@ -33,12 +34,15 @@ def download_playlist_from_youtube_url(playlist_url):
     for i, yt_video in enumerate(reversed(yt_videos)):
         stream = yt_video.streams.get_audio_only()
         if not stream:
-            # print(f"No audio stream found for {yt_video.title}")
+            # if verbose:
+            #     print(f"No audio stream found for {yt_video.title}")
             continue
 
         n = str(i + 1).zfill(num_digits)
-        print(f"[{n}/{num_videos}] Downloading video ...")
-        # print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
+
+        if verbose:
+            print(f"[{n}/{num_videos}] Downloading video ...")
+            # print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
 
         random_filename = str(uuid.uuid4())
         video_filename = random_filename + ".mp4"
@@ -70,7 +74,8 @@ def download_playlist_from_youtube_url(playlist_url):
         if thumbnail_url:
             base, _ = os.path.splitext(video_filepath)
             image_filepath = base + ".jpg"
-            print(f"  - Downloading thumbnail ...")
+            if verbose:
+                print(f"  - Downloading thumbnail ...")
             urllib.request.urlretrieve(thumbnail_url, image_filepath)
             image_filename = os.path.basename(image_filepath)
             with open(image_filepath, "rb") as f:
@@ -79,24 +84,34 @@ def download_playlist_from_youtube_url(playlist_url):
         video.downloaded = True
         video.save(update_fields=["downloaded"])
 
-        print()
+        if verbose:
+            print()
 
-    playlist.downloaded = True
-    playlist.save(update_fields=["downloaded"])
-    print("Done")
+    if verbose:
+        print("Done")
+
+
+def download_unfinished_playlists(verbose: bool = False):
+    playlists = Playlist.objects.all()
+    for playlist in playlists:
+        if playlist.downloaded:
+            continue
+        download_playlist_from_youtube_url(playlist.url, verbose=verbose)
 
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--url", action="store", default=None, dest="url")
+        parser.add_argument(
+            "--verbose", action="store_true", default=False, dest="verbose"
+        )
 
     def handle(self, *args, **options):
         playlist_url = options.get("url")
+        verbose = options.get("verbose")
         if playlist_url:
-            download_playlist_from_youtube_url(playlist_url)
+            download_playlist_from_youtube_url(playlist_url, verbose=verbose)
             return
 
         # Process any existing Playlists that are not yet downloaded.
-        playlists = Playlist.objects.filter(downloaded=False)
-        for playlist in playlists:
-            download_playlist_from_youtube_url(playlist.url)
+        download_unfinished_playlists()

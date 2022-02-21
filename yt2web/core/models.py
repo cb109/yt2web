@@ -30,7 +30,12 @@ class Playlist(BaseModel):
     url = models.CharField(max_length=512)
     title = models.CharField(max_length=256)
     videos = models.ManyToManyField("Video", blank=True, related_name="playlists")
-    downloaded = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
+
+    @property
+    def downloaded(self):
+        if not self.videos.exists():
+            return True
+        return all([video.downloaded for video in self.videos.all()])

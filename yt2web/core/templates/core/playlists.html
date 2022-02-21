@@ -29,7 +29,7 @@
         </span>
         <div class="song-meta-container">
           <div style="display: flex; align-items: center;">
-            <img src="{{ song.cover_art_url }}" style="max-width: 48px; object-fit: cover; margin-right: 16px" />
+            <img src="{{ song.cover_art_url }}" style="max-width: 72px; object-fit: cover; margin-right: 16px" />
             <span class="song-name" data-amplitude-song-info="name" data-amplitude-song-index="{{ forloop.counter0 }}"></span>
           </div>
           <!-- <span class="song-artist-album"><span data-amplitude-song-info="artist" data-amplitude-song-index="{{ forloop.counter0 }}"></span> - <span data-amplitude-song-info="album" data-amplitude-song-index="{{ forloop.counter0 }}"></span></span> -->
@@ -196,11 +196,12 @@
   }
   div#list-screen div#list div.song div.song-meta-container span.song-name {
     font-family: "Lato", sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     line-height: 16px;
     color: #fbfbfb;
     letter-spacing: 0.47px;
     display: block;
+    word-break: break-word;
   }
   div#list-screen
     div#list

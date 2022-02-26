@@ -55,6 +55,7 @@ class VideoAdmin(BaseModelAdmin):
         "created_at",
         "updated_at",
     )
+    list_filter = ("playlist", "downloaded")
     readonly_fields = ("player", "youtube_link")
 
     @mark_safe

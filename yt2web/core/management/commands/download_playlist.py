@@ -13,10 +13,12 @@ from django.core.files.base import File
 
 def download_playlist_from_youtube_url(playlist_url: str, verbose: bool = False):
     yt_playlist = pytube.Playlist(playlist_url)
-    playlist, _ = Playlist.objects.get_or_create(
-        url=playlist_url,
-        title=yt_playlist.title,
-    )
+    playlist, created = Playlist.objects.get_or_create(url=playlist_url)
+
+    if not created and playlist.title != yt_playlist.title:
+        playlist.title = yt_playlist.title
+        playlist.save(update_fields=["title"])
+
     if playlist.downloaded:
         return
 

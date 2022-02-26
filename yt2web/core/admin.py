@@ -13,7 +13,7 @@ class BaseModelAdmin(admin.ModelAdmin):
 
 class PlaylistAdmin(BaseModelAdmin):
     list_display = (
-        "title",
+        "title_or_url",
         "num_videos",
         "player_link",
         "youtube_link",
@@ -23,6 +23,9 @@ class PlaylistAdmin(BaseModelAdmin):
     )
     filter_horizontal = ("videos",)
     readonly_fields = ("player_link", "youtube_link", "downloaded")
+
+    def title_or_url(self, playlist):
+        return playlist.title or playlist.url
 
     def num_videos(self, playlist):
         return playlist.videos.count()

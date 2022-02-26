@@ -28,7 +28,7 @@ class Video(BaseModel):
 
 class Playlist(BaseModel):
     url = models.CharField(max_length=512)
-    title = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, default="", blank=True)
     videos = models.ManyToManyField("Video", blank=True, related_name="playlists")
 
     def __str__(self):

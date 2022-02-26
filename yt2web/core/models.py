@@ -37,5 +37,5 @@ class Playlist(BaseModel):
     @property
     def downloaded(self):
         if not self.videos.exists():
-            return True
+            return False
         return all([video.downloaded for video in self.videos.all()])

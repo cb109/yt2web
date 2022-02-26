@@ -22,7 +22,7 @@ class PlaylistAdmin(BaseModelAdmin):
         "updated_at",
     )
     filter_horizontal = ("videos",)
-    readonly_fields = ("player_link", "youtube_link")
+    readonly_fields = ("player_link", "youtube_link", "downloaded")
 
     def num_videos(self, playlist):
         return playlist.videos.count()

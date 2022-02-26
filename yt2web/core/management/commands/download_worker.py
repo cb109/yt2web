@@ -18,6 +18,4 @@ class Command(BaseCommand):
         verbose = options["verbose"]
         while True:
             download_unfinished_playlists(verbose=verbose)
-            if verbose:
-                print(f"Zzz for {seconds}s ...")
             time.sleep(seconds)

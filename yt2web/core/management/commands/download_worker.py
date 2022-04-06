@@ -12,10 +12,12 @@ class Command(BaseCommand):
         parser.add_argument(
             "--verbose", action="store_true", default=False, dest="verbose"
         )
+        parser.add_argument("--force", action="store_true", default=False, dest="force")
 
     def handle(self, *args, **options):
         seconds = options["seconds"]
         verbose = options["verbose"]
+        force = options.get("force")
         while True:
-            download_unfinished_playlists(verbose=verbose)
+            download_unfinished_playlists(verbose=verbose, force=force)
             time.sleep(seconds)

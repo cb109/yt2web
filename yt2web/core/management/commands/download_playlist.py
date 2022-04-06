@@ -11,7 +11,11 @@ from yt2web.core.models import Video
 from django.core.files.base import File
 
 
-def download_playlist_from_youtube_url(playlist_url: str, verbose: bool = False):
+def download_playlist_from_youtube_url(
+    playlist_url: str,
+    verbose: bool = False,
+    force: bool = False,
+):
     yt_playlist = pytube.Playlist(playlist_url)
     playlist, created = Playlist.objects.get_or_create(url=playlist_url)
 
@@ -19,7 +23,7 @@ def download_playlist_from_youtube_url(playlist_url: str, verbose: bool = False)
         playlist.title = yt_playlist.title
         playlist.save(update_fields=["title"])
 
-    if playlist.downloaded:
+    if playlist.downloaded and not force:
         return
 
     if verbose:
@@ -93,12 +97,12 @@ def download_playlist_from_youtube_url(playlist_url: str, verbose: bool = False)
         print("Done")
 
 
-def download_unfinished_playlists(verbose: bool = False):
+def download_unfinished_playlists(verbose: bool = False, force: bool = False):
     playlists = Playlist.objects.all()
     for playlist in playlists:
-        if playlist.downloaded:
+        if playlist.downloaded and not force:
             continue
-        download_playlist_from_youtube_url(playlist.url, verbose=verbose)
+        download_playlist_from_youtube_url(playlist.url, verbose=verbose, force=force)
 
 
 class Command(BaseCommand):
@@ -107,13 +111,17 @@ class Command(BaseCommand):
         parser.add_argument(
             "--verbose", action="store_true", default=False, dest="verbose"
         )
+        parser.add_argument("--force", action="store_true", default=False, dest="force")
 
     def handle(self, *args, **options):
         playlist_url = options.get("url")
         verbose = options.get("verbose")
+        force = options.get("force")
         if playlist_url:
-            download_playlist_from_youtube_url(playlist_url, verbose=verbose)
+            download_playlist_from_youtube_url(
+                playlist_url, verbose=verbose, force=force
+            )
             return
 
         # Process any existing Playlists that are not yet downloaded.
-        download_unfinished_playlists(verbose=verbose)
+        download_unfinished_playlists(verbose=verbose, force=force)

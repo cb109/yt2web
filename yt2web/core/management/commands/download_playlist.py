@@ -88,6 +88,10 @@ def download_playlist_from_youtube_url(
         if verbose:
             print()
 
+    if playlist.force_sync_on_next_download:
+        playlist.force_sync_on_next_download = False
+        playlist.save(update_fields=["force_sync_on_next_download"])
+
     if verbose:
         print("Done")
 
@@ -95,9 +99,17 @@ def download_playlist_from_youtube_url(
 def download_unfinished_playlists(verbose: bool = False, force: bool = False):
     playlists = Playlist.objects.all()
     for playlist in playlists:
-        if playlist.downloaded and not force:
+        if (
+            playlist.downloaded
+            and not playlist.force_sync_on_next_download
+            and not force
+        ):
             continue
-        download_playlist_from_youtube_url(playlist.url, verbose=verbose, force=force)
+        download_playlist_from_youtube_url(
+            playlist.url,
+            verbose=verbose,
+            force=playlist.force_sync_on_next_download or force,
+        )
 
 
 class Command(BaseCommand):

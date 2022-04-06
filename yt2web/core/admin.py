@@ -18,6 +18,7 @@ class PlaylistAdmin(BaseModelAdmin):
         "player_link",
         "youtube_link",
         "downloaded",
+        "force_sync_on_next_download",
         "created_at",
         "updated_at",
     )
@@ -26,6 +27,11 @@ class PlaylistAdmin(BaseModelAdmin):
 
     def title_or_url(self, playlist):
         return playlist.title or playlist.url
+
+    def downloaded(self, playlist):
+        return playlist.downloaded
+
+    downloaded.boolean = True
 
     def num_videos(self, playlist):
         return playlist.videos.count()

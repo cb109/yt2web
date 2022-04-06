@@ -30,6 +30,7 @@ class Playlist(BaseModel):
     url = models.CharField(max_length=512)
     title = models.CharField(max_length=256, default="", blank=True)
     videos = models.ManyToManyField("Video", blank=True, related_name="playlists")
+    force_sync_on_next_download = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

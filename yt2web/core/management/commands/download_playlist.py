@@ -1,7 +1,6 @@
 import math
 import os
 import urllib.request
-import uuid
 
 import pytube
 from django.conf import settings
@@ -50,13 +49,6 @@ def download_playlist_from_youtube_url(
             print(f"[{n}/{num_videos}] Downloading video ...")
             # print(f"[{n}/{num_videos}] Downloading {yt_video.title} ...")
 
-        random_filename = str(uuid.uuid4())
-        video_filename = random_filename + ".mp4"
-        video_filepath = stream.download(
-            output_path=settings.MEDIA_ROOT,
-            filename=video_filename,
-        )
-
         video, _ = Video.objects.get_or_create(
             url=yt_video.watch_url,
             audio_only=True,
@@ -69,23 +61,26 @@ def download_playlist_from_youtube_url(
 
         playlist.videos.add(video)
 
-        if video.downloaded:
+        if video.downloaded and video.content_file.name and video.thumbnail_file.name:
             continue
 
-        video_filename = os.path.basename(video_filepath)
-        with open(video_filepath, "rb") as f:
+        temp_video_filepath = stream.download(output_path=settings.MEDIA_ROOT)
+        video_filename = os.path.basename(temp_video_filepath)
+        with open(temp_video_filepath, "rb") as f:
             video.content_file.save(video_filename, File(f))
+        os.remove(temp_video_filepath)
 
         thumbnail_url = yt_video.thumbnail_url
         if thumbnail_url:
-            base, _ = os.path.splitext(video_filepath)
-            image_filepath = base + ".jpg"
+            base, _ = os.path.splitext(temp_video_filepath)
+            temp_image_filepath = base + ".jpg"
             if verbose:
                 print(f"  - Downloading thumbnail ...")
-            urllib.request.urlretrieve(thumbnail_url, image_filepath)
-            image_filename = os.path.basename(image_filepath)
-            with open(image_filepath, "rb") as f:
+            urllib.request.urlretrieve(thumbnail_url, temp_image_filepath)
+            image_filename = os.path.basename(temp_image_filepath)
+            with open(temp_image_filepath, "rb") as f:
                 video.thumbnail_file.save(image_filename, File(f))
+            os.remove(temp_image_filepath)
 
         video.downloaded = True
         video.save(update_fields=["downloaded"])

@@ -1,5 +1,6 @@
 import math
 import os
+import unicodedata
 import urllib.request
 
 import pytube
@@ -8,6 +9,22 @@ from django.core.management.base import BaseCommand
 from yt2web.core.models import Playlist
 from yt2web.core.models import Video
 from django.core.files.base import File
+
+
+def _patch_pytube_safe_filename():
+    original_safe_filename = pytube.helpers.safe_filename
+
+    def extended_safe_filename(s: str, max_length: int = 255) -> str:
+        # Fix for 'UnicodeEncodeError: 'latin-1' codec can't encode
+        # character ...'. Snippet taken from Django's slugify(), see:
+        # https://stackoverflow.com/a/295466
+        s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii")
+        return original_safe_filename(s)
+
+    pytube.helpers.safe_filename = extended_safe_filename
+
+
+_patch_pytube_safe_filename()
 
 
 def download_playlist_from_youtube_url(

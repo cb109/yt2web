@@ -8,7 +8,7 @@ from yt2web.core.management.commands.download_playlist import (
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("--seconds", action="store", default=5, dest="seconds")
+        parser.add_argument("--seconds", action="store", default=60, dest="seconds")
         parser.add_argument(
             "--verbose", action="store_true", default=False, dest="verbose"
         )
